@@ -1,0 +1,192 @@
+<html>
+
+<head>
+    <meta content="text/html; charset=UTF-8">
+    <title>Store</title>
+    <script type="text/javascript" th:src="@{/js/vue.min.js}" src="js/vue.min.js" ></script>
+
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}" src="js/jquery.min.js" ></script>
+    <script type="text/javascript" th:src="@{/js/lazyload.js}" src="js/lazyload.js" ></script>
+    <!--导入 BootStrap CSS-->
+    <link type="text/css" rel="stylesheet" th:href="@{/plug/bootstrap4/css/bootstrap.css}"/>
+<!--    <link rel="stylesheet"-->
+<!--          href="http://localhost:/Web_meiTuan/css/bootstrap.min.css">-->
+    <!-- layer -->
+    <link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}"/>
+    <script type="text/javascript" th:src="@{/plug/layui/layui.all.js}"  src="plug/layui/layui.all.js" ></script>
+</head>
+
+<style>
+    /* 按钮 购买 */
+    .fileinput-button {
+        position: relative;
+        display: inline-block;
+        background: #b1dfbb; /* 背景色、透明度 */
+        border: 1px solid rgba(23, 23, 23, 0.4); /* 鼠标悬浮时，边框样式 */
+        border-radius: 20px; /* 圆角半径 */
+        padding: 1px 30px; /* 边距：高度、宽度 */
+        overflow: hidden;
+        color: white;
+        text-decoration: none;
+        text-indent: 0;
+        line-height: 20px;
+        font-size: 20px;
+    }
+</style>
+
+<body>
+<div align="center" id="app" style="background-color: floralwhite">
+
+  
+    <div>
+
+
+            <div  style="display: flex; border-spacing: 30px; flex-wrap: wrap;margin-left: 10%;margin-right: 5%">
+
+                <!-- 商品1 -->
+                <div v-for="(data,i)  in list"
+                        style="width: 200px; height: 300px; background-color: #DCDCDC; display: table-cell; margin-right: 5px;margin-left: 5px;margin-top: 20px">
+                    <!-- 图片 -->
+                    <img style="width: 200px; height: 200px"
+                         :src=data.url class="lazyload">
+                    <div
+                            style="width: 100%; height: 100px; background-color: #F6F6F6; text-align: center;">
+                        <!-- 菜品名称 -->
+                        <div style="height: 5px;"></div>
+                        <div>
+                            <label style="font-size: 20px">{{data.title}}</label>
+                        </div>
+                        <!-- 价格 -->
+                        <div style="margin-top: 5px;margin-bottom: 5px">
+                            <label style="color: orange">${{data.price}}</label>
+                        </div>
+                        <!-- 购买 -->
+                        <div style="margin-top: 1px">
+                            <input type="button" value="BUY"  @click="buy(data)"  class="fileinput-button">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+    </div>
+
+    <div style="margin-top: 30px; margin-bottom: 100px;">
+
+    </div>
+
+</div>
+</body>
+
+<script>
+    var vm =new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue.js!',
+            list: [
+                {
+                    id: "1",
+                    url:"imgs/store/cathouse.jpg",
+                    price:998,
+                    title:"Cat House"
+                },
+                {
+                    id: "2",
+                    url:"imgs/store/dogfood.jpg",
+                    price:58,
+                    title:"Dog Food"
+                },
+                {
+                    id: "3",
+                    url:"imgs/store/dogfood1.jpg",
+                    price:598,
+                    title:"Dog Food"
+                },
+                {
+                    id: "4",
+                    url:"imgs/store/dogfood3.jpg",
+                    price:198,
+                    title:"Dog Food"
+                },
+                {
+                    id: "5",
+                    url:"imgs/store/doghouse.jpg",
+                    price:88,
+                    title:"Dog House"
+                },
+                {
+                    id: "6",
+                    url:"imgs/store/drink.jpg",
+                    price:48,
+                    title:"Pet Water Dispenser"
+                },
+                {
+                    id: "7",
+                    url:"imgs/store/pet1.jpg",
+                    price:43,
+                    title:"Pet Clothes"
+                },
+                {
+                    id: "8",
+                    url:"imgs/store/play.jpg",
+                    price:66,
+                    title:"Pet Toys"
+                },
+                {
+                    id: "9",
+                    url:"imgs/store/toy1.jpg",
+                    price:98,
+                    title:"Pet Toys"
+                },
+                {
+                    id: "10",
+                    url:"imgs/store/toy2.jpg",
+                    price:15,
+                    title:"Pet Toys"
+                },
+
+            ]
+        },
+        mounted() {
+
+        },
+        methods: {
+            buy(data) {
+                console.log("data....",data)
+                buy(data)
+            }
+        }
+
+    })
+
+    $(function() {
+        $("img.lazyload").lazyload()});
+    function ok() {
+        alert("Goods saved!");
+    }
+    function buy(thing){
+        console.log("data...",thing)
+        // 准备参数
+        var param = new Object();
+        $.ajax({
+            type:"POST",
+            async:true,  //默认true,异步
+            data: JSON.stringify(thing),
+            contentType: "application/json;charset=utf-8",
+            dataType:'json',
+            url:"/pay/pay",
+            success:function(data){
+                console.log("hhh,",data)
+                window.open(data,'_blank');
+                // window.location.href = data
+            },
+            error:function() {
+                layer.alert('System error, server is busy!！', {icon: 2,btn:["sure"]});
+            }
+        });
+    }
+</script>
+
+</html>

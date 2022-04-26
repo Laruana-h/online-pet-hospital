@@ -1,0 +1,207 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Add diagonosis</title>
+<link type="text/css" rel="stylesheet" th:href="@{/css/page.css}" />
+<script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}" ></script>
+<!-- validation -->
+<script type="text/javascript" th:src="@{/js/jquery/jquery.validate.js}" ></script>
+<!-- layer -->
+<link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}" />
+<script type="text/javascript" th:src="@{/plug/layui/layui.js}"  charset="utf-8"></script>
+
+<link type="text/css" rel="stylesheet" th:href="@{/js/layer/skin/layer.css}"/>
+<script type="text/javascript" th:src="@{/js/layer/layer.js}" ></script>
+
+<style type="text/css">
+
+.need_span{
+	color: red;
+	display: none;
+}
+.need_0, .validation_span{
+	color: red;
+}
+.need_1{
+	color: #666666;
+}
+.input_0{
+	width: 200px;
+}
+.form_table td{
+	padding: 5px;
+}
+.text_ad_0{
+	font-weight: bold;
+	color: #444444;
+	white-space: nowrap;
+}
+</style>
+
+<script type="text/javascript"  th:inline="javascript">
+    var userId = [[${userId}]];
+    var petId = [[${petId}]];
+    console.log(userId+"-----" + petId);
+layui.use('laydate', function(){
+	  var laydate = layui.laydate;
+
+	  //执行一个laydate实例
+	  laydate.render({
+	    elem: '#birthday' //指定元素
+          ,type: 'datetime'
+	    ,trigger : 'click'
+	  });
+});
+
+$(function(){
+    $('form').validate({
+        debug:true,
+        /**//* 设置验证规则 */
+        rules: {
+            info: {
+                required: true
+            },
+            type: {
+                required: true
+            },
+            status: {
+                required: true
+            }
+        },
+        /**//* 设置错误信息 */
+        messages: {
+            info: {
+                required:"Content can not be null !"
+            },
+            type: {
+                required:"Type can not be null !"
+            },
+            status: {
+                required:"Status can not be null !"
+            }
+        },
+        /**//* 设置验证触发事件 */
+        onsubmit:true,
+        /**//* 设置错误信息提示DOM */
+        errorPlacement: function(error, element) {
+            $(element[0]).parent().find(".validation_span").text(error.html()).show();
+        },
+        success:function(error, element){
+            $(element[0]).parent().find(".validation_span").text("");
+        },
+        submitHandler: function (){
+            save();
+        }
+    });
+	
+	//返回按钮
+	$("#backBtu").click(function(){
+		layer.confirm('Confirm to return?', {icon: 3, title:'Note',btn:["sure","cancel"]}, function(index){
+		    parent.layer.closeAll();
+		});
+	});
+});
+
+//保存
+function save(){
+	var param = new Object();
+	param.userId = userId;
+	param.petId = petId;
+	param.info = $.trim($("#info").val());
+	param.type = $.trim($("#type").val());
+	param.status = $.trim($("#status").val());
+
+	console.log(param);
+	var urlStr = "/user/diagnosis/doAdd";
+	
+	layer.confirm('Confirm to save?', {icon: 3, title:'Note',btn:["sure","cancel"]}, function(index){
+		$.ajax({
+    		type:"POST",
+    		async:true,  //默认true,异步
+    		data:param,
+    		url:urlStr,
+    		success:function(data){
+    			console.log(data);
+    			if(data == "SUCCESS"){
+    				layer.alert('Save successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+       					parent.search();
+       	    			parent.$("#add_iframe iframe").attr("src", "");
+       			    	parent.$("div").first().show();
+       			    	parent.$("#add_iframe").hide();
+       			    	parent.layer.closeAll();
+       				});
+    			}else if(data == "LGINOUT"){
+    				//重新登录
+    				parent.window.location.href = "/logout";    				
+    			}else{
+    				layer.alert('Save failed!', {icon: 2,btn:["sure"]}, function(indexNo){
+    					parent.layer.closeAll();
+       				});
+    			}
+    	    }
+    	});
+	});
+}
+
+</script>
+</head>
+<body>
+<div  style="margin-left:15px; height: 400px;">
+<div class="first_div" style="border:none;">
+	<div id="adListDiv" align="left" >
+	<form>
+		<table class="form_table" style="border-collapse: collapse;margin-left:20px;margin-top:10px;">
+            <tr>
+                <td align="right" >
+                    <span class="need_0">*</span>
+                    <span class="text_ad_0">Medical information:</span>
+                </td>
+                <td>
+                    <textarea id="info" type="text" name="info" rows="5" cols="30"></textarea>
+                    <span class="validation_span"></span>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" >
+                    <span class="need_0">*</span>
+                    <span class="text_ad_0">Type:</span>
+                </td>
+                <td>
+                    <select id="type" name="type" class="input_0">
+                        <option value="1">Normal medical treatment</option>
+                        <option value="2">Inject vaccination</option>
+                        <option value="3">Expelling parasite</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" >
+                    <span class="need_0">*</span>
+                    <span class="text_ad_0">Status:</span>
+                </td>
+                <td>
+                    <select id="status" name="status" class="input_0">
+                        <option value="1">Normal</option>
+                        <option value="2">Serious</option>
+                        <option value="3">Critically ill</option>
+                        <option value="4">Death</option>
+                    </select>
+                </td>
+            </tr>
+			<tr>
+				<td colspan="2" align="left" >
+					<div style="margin-top:10px;margin-bottom:20px;margin-left:120px;">
+						<input type="submit" class="layui-btn" lay-submit="" lay-filter="add" id="saveBtu" name="saveBtu" value="Save" style="" />
+						<input type="button" class="layui-btn" lay-submit="" lay-filter="add" id="backBtu" name="backBtu" value="Return" style="margin-left:20px;" />
+					</div>
+				</td>
+			</tr>
+		</table>
+	</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

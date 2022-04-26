@@ -1,0 +1,137 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <title>Medical management</title>
+    <link rel="stylesheet" th:href="@{/css/page.css}" type="text/css"/>
+    <script th:src="@{/js/jquery/jquery-3.3.1.js}" type="text/javascript"></script>
+    <!-- mmGrid -->
+    <link rel="stylesheet" th:href="@{/plug/mmGrid/mmGrid.css}" type="text/css"/>
+    <script th:src="@{/plug/mmGrid/mmGrid.js}" type="text/javascript"></script>
+    <!-- mmGrid page -->
+    <link rel="stylesheet" th:href="@{/plug/mmGrid/mmPaginator.css}" type="text/css"/>
+    <script th:src="@{/plug/mmGrid/mmPaginator.js}" type="text/javascript"></script>
+
+    <!-- layer -->
+    <link media="all" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}" type="text/css"/>
+    <script charset="utf-8" th:src="@{/plug/layui/layui.js}" type="text/javascript"></script>
+
+    <link rel="stylesheet" th:href="@{/js/layer/skin/layer.css}" type="text/css"/>
+    <script th:src="@{/js/layer/layer.js}" type="text/javascript"></script>
+    <style type="text/css">
+    </style>
+
+</head>
+<body>
+<div lay-allowclose="true" style="margin-left:15px; width: 98%">
+    <div class="first_div" style="border:none;">
+        <table class="param_table" style="margin-left:10px;">
+            <tr>
+                <td style="width:150px;">
+                    <span>Medical advice:</span>
+                    <input class="input_0" id="info" name="info" type="text"/>
+                </td>
+                <td style="">
+                    <div class="layui-btn-group">
+                        <button class="layui-btn" onclick="search()">Search</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <div style="margin:3px 10px 10px 10px;"></div>
+        <div id="exampleTableUser" style="margin-top:5px;"></div>
+        <div align="right" id="paginator11-1" style="margin-right:10px;"></div>
+    </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+    var petId = [[${petId}]];
+    $(function () {
+        //表格
+        $('#exampleTableUser').mmGrid({
+            root: 'rows',// 和后台数据保存列一致,对应MMGridPageVoBean rows
+            url: "/user/diagnosis/getAllByLimit",
+            width: 'auto',
+            height: 'auto',
+            //checkCol: true,
+            fullWidthRows: true, //表格第一次加载数据时列伸展，自动充满表格
+            showBackboard: false,
+            //multiSelect: true,
+            indexCol: true,  //索引列
+            params: function () {
+                var param = new Object();
+                param.info = $.trim($("#info").val());
+                if (petId != 'petId') {
+                    param.petId = petId;
+                }
+                return param;
+            },
+            cols: [{title: 'ID', name: 'id', width: 60, hidden: true},
+                {title: 'Name', name: 'name', width: 40},
+                {title: 'Username', name: 'userName', width: 40},
+                {title: 'VetName', name: 'doctorName', width: 40},
+                {title: 'Medical advice:', name: 'info', width: 40},
+                {
+                    title: 'Type', name: 'type', width: 30, renderer: function (val, item, rowIndex) {
+                        console.log(item);
+                        var t = "";
+                        switch (val) {
+                            case 1:
+                                t = "Normal medical treatment";
+                                break;
+                            case 2:
+                                t = "Inject vaccination";
+                                break;
+                            case 3:
+                                t = "Expelling parasite";
+                                break;
+                        }
+                        return t;
+                    }
+                },
+                {
+                    title: 'Status', name: 'status', width: 30, renderer: function (val, item, rowIndex) {
+                        console.log(val);
+
+                        //状态:1申请中,2申请通过,3不通过,4已完成
+                        var t = "";
+                        switch (val) {
+                            case 1:
+                                t = "Normal";
+                                break;
+                            case 2:
+                                t = "Serious";
+                                break;
+                            case 3:
+                                t = "Critically ill";
+                                break;
+                            case 4:
+                                t = "Death";
+                                break;
+                        }
+                        return t;
+                    }
+                },
+                {title: 'Create Time', name: 'createTime', width: 30}
+            ],
+            plugins: [
+                $('#paginator11-1').mmPaginator({
+                    totalCountName: 'total',    //对应MMGridPageVoBean count
+                    page: 1,                    //初始页
+                    pageParamName: 'page',      //当前页数
+                    limitParamName: 'limit', //每页数量
+                    limitList: [10, 20, 30, 50]
+                })
+            ]
+        });
+    });
+
+    //查询
+    function search() {
+        $('#exampleTableUser').mmGrid().load({"page": 1});
+    }
+</script>

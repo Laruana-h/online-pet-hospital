@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html style="height: 90%; width: 100%" xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <!-- layui -->
+    <link type="text/css" rel="stylesheet" th:href="@{/css/page.css}" />
+    <link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}"  media="all"/>
+    <script type="text/javascript" th:src="@{/plug/layui/layui.js}"  charset="utf-8"></script>
+</head>
+<body style="height: 90%;width: 100%; margin: 0">
+<script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}"></script>
+<script type="text/javascript" th:src="@{/js/echarts/echarts.js}"></script>
+    Select pet:
+    <select id="petId" name="petId" class="input_0">
+    </select>
+    <input type="button" class="layui-btn" lay-filter="add" onclick="cx()" value="Search" style="" />
+<div id="container" style="height: 90%;width: 100%"></div>
+</body>
+</html>
+
+<script type="text/javascript" th:inline="javascript">
+    var pets = [[${pets}]];
+    var dailys = [[${dailys}]];
+
+    console.log(pets);
+
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+
+    function fulshEchart(dailys){
+        var dateTime = new Array();
+        var wData = new Array();
+        var hData = new Array();
+        var tData = new Array();
+        var aData = new Array();
+        if (dailys){
+            for (var i=0; i<dailys.length; i++){
+                dateTime.push(dailys[i].dateTime);
+                wData.push(dailys[i].weight);
+                hData.push(dailys[i].height);
+                tData.push(dailys[i].temperature);
+                aData.push(dailys[i].appetite);
+            }
+        }
+        option = {
+            title: {
+                text: 'Pet log'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            legend: {
+                data: ['temperature', 'Weight', 'Height', 'Appetite']
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: dateTime
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: 'temperature',
+                    type: 'line',
+                    stack: 'Total',
+                    areaStyle: {},
+                    data: tData
+                },
+                {
+                    name: 'Weight',
+                    type: 'line',
+                    stack: 'Total',
+                    areaStyle: {},
+                    data: wData
+                },
+                {
+                    name: 'Height',
+                    type: 'line',
+                    stack: 'Total',
+                    areaStyle: {},
+                    data: hData
+                },
+                {
+                    name: 'Appetite',
+                    type: 'line',
+                    stack: 'Total',
+                    areaStyle: {},
+                    data: aData
+                }
+            ]
+        };
+
+
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
+    }
+
+    $(function(){
+        // 渲染下拉框
+        for(var i=0; i<pets.length; i++){
+            var d = pets[i];
+            var newOption = document.createElement("option");
+            newOption.text=d.name;
+            newOption.value=d.id;
+            document.getElementById("petId").add(newOption);
+        }
+        fulshEchart(dailys);
+    });
+
+    function cx(){
+        var id = $("#petId").val();
+        $.ajax({
+            type:"POST",
+            async:false,  //默认true,异步
+            data:{"id":id},
+            dataType:'json',
+            url:"/health/tjDailyData",
+            success:function(data){
+                fulshEchart(data);
+            },
+            error: function() {
+                layer.alert('System Error!',{offset: ['100px', '50px']}, {icon: 2,btn:["sure"]});
+            }
+        });
+    }
+
+</script>

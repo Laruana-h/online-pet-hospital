@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.phms.mapper.OrderMapper">
+    
+    <resultMap type="com.phms.pojo.Order" id="OrderResult">
+        <result property="id"    column="id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="price"    column="price"    />
+        <result property="buyTime"    column="buy_time"    />
+        <result property="isPickedUp"    column="is_picked_up"    />
+    </resultMap>
+
+    <sql id="selectOrderVo">
+        select id, goods_name, goods_id, user_id, user_name, price, buy_time, is_picked_up from `order`
+    </sql>
+
+    <select id="selectOrderList" parameterType="com.phms.pojo.Order" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        <where>  
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="price != null  and price != ''"> and price = #{price}</if>
+            <if test="buyTime != null "> and buy_time = #{buyTime}</if>
+            <if test="isPickedUp != null "> and is_picked_up = #{isPickedUp}</if>
+        </where>
+        ORDER BY buy_time DESC
+        <if test="limit != null">
+            limit #{page}, #{limit}
+        </if>
+    </select>
+    <select id="countOrderList" parameterType="com.phms.pojo.Order" resultType="java.lang.Integer">
+        select count(*) from `order`
+        <where>
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="price != null  and price != ''"> and price = #{price}</if>
+            <if test="buyTime != null "> and buy_time = #{buyTime}</if>
+            <if test="isPickedUp != null "> and is_picked_up = #{isPickedUp}</if>
+        </where>
+        ORDER BY buy_time DESC
+        <if test="limit != null">
+            limit #{page}, #{limit}
+        </if>
+    </select>
+    
+    <select id="selectOrderById" parameterType="Long" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrder" parameterType="com.phms.pojo.Order" useGeneratedKeys="true" keyProperty="id">
+        insert into `order`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsName != null">goods_name,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="price != null">price,</if>
+            <if test="buyTime != null">buy_time,</if>
+            <if test="isPickedUp != null">is_picked_up,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsName != null">#{goodsName},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="price != null">#{price},</if>
+            <if test="buyTime != null">#{buyTime},</if>
+            <if test="isPickedUp != null">#{isPickedUp},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrder" parameterType="com.phms.pojo.Order">
+        update `order`
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsName != null">goods_name = #{goodsName},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="buyTime != null">buy_time = #{buyTime},</if>
+            <if test="isPickedUp != null">is_picked_up = #{isPickedUp},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderById" parameterType="Long">
+        delete from `order` where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderByIds" parameterType="String">
+        delete from `order` where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

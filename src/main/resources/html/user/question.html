@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+</head>
+<style type="text/css">
+  /*
+  Please wrap your collapsible content in a single element or so help me
+  Must add a transition or it breaks because that's the whole purpose of this
+  Only one transition-duration works (see explanation on line #141 in JS)
+  You can add more to an inner wrapper (.details-styling)
+*/
+.collapse-init summary + * {
+  transition: all 0.25s ease-in-out;
+  overflow: hidden;
+}
+
+/*
+  Closed state. Any CSS transitions work here
+  The JS has a height calculation to make sliding opened/closed easier, but it's not necessary
+  Remove the height prop for a simple toggle on/off (after all that work I did for you?)
+*/
+.collapse-init :not(.panel-active) summary + * {
+  height: 0;
+  opacity: 0;
+  -webkit-transform: scale(0.9);
+          transform: scale(0.9);
+  -webkit-transform-origin: bottom center;
+          transform-origin: bottom center;
+}
+
+.collapse-init summary {
+  list-style: none;
+}
+.collapse-init summary::-webkit-details-marker {
+  display: none;
+}
+.collapse-init summary::before {
+  display: none;
+}
+.collapse-init summary {
+  cursor: pointer;
+}
+
+/*
+  This element exists so .details-wrapper has no extra margin/padding that can screw with the smooth height collapse
+  You can style .details-wrapper decoratively but avoid anything that modifies the box and add it to .details-styling instead
+  Otherwise, this element is totally optional. Remove if you hate divitis
+*/
+.details-styling {
+  padding: 1em;
+}
+
+::-moz-selection {
+  background: #fbcb6a;
+  color: #4d4433;
+}
+
+::selection {
+  background: #fbcb6a;
+  color: #4d4433;
+}
+
+html {
+  
+  color: #3c334d;
+}
+
+body {
+  font: 1em/1.4 'Quicksand', sans-serif;
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 3vw;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 1em;
+  text-align: center;
+}
+h1 + p {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 50ch;
+}
+h1 ~ p {
+  font-size: 1.2em;
+  text-align: center;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+
+
+a {
+  color: #8f63e9;
+  box-shadow: inset 0 -3px #cfbcf5;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.2s;
+}
+a:hover, a:focus {
+  box-shadow: inset 0 -1.2em #66e8dc;
+  color: #f8f5fe;
+}
+
+abbr {
+  font-variant: small-caps;
+  text-transform: lowercase;
+  font-size: 1.2em;
+}
+
+
+.container {
+  box-shadow: 0.2em 1em 2em -1em #d6d1e0;
+  margin: 2.4em 0;
+}
+
+details {
+  background: #fff;
+  border: 1px solid #d6d1e0;
+  border-bottom: 0;
+  list-style: none;
+}
+details:first-child {
+  border-radius: 6px 6px 0 0;
+}
+details:last-child {
+  border-bottom: 1px solid #d6d1e0;
+  border-radius: 0 0 6px 6px;
+}
+
+summary {
+  display: block;
+  transition: 0.2s;
+  font-weight: 700;
+  padding: 1em;
+}
+summary:focus {
+  outline: 2px solid #84eee4;
+}
+.collapse-init summary::after {
+  border-right: 2px solid;
+  border-bottom: 2px solid;
+  content: '';
+  float: right;
+  width: 0.5em;
+  height: 0.5em;
+  margin-top: 0.25em;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  transition: inherit;
+}
+[open] summary {
+  background: #84eee4;
+  color: #f8f5fe;
+}
+[open] summary::after {
+  margin-top: 0.5em;
+  -webkit-transform: rotate(225deg);
+          transform: rotate(225deg);
+}
+
+</style>
+
+<body>
+<div style="text-align:center;clear:both;">
+<script src="/gg_bd_ad_720x90.js" type="text/javascript"></script>
+<script src="/follow.js" type="text/javascript"></script>
+</div>
+<h2>Get Your Pet Hospital Answers Here</h2>
+
+<div class="container collapse">
+  <details>
+    <summary> Do I need to brush my pet's teeth?  </summary>
+    <div class="details-wrapper">
+      <div class="details-styling">        
+        <p> Routine dental care at home can help avoid painful dental problems such as caries or periodontal disease. Our nurses can teach you how to train your pet into enjoying the daily task of tooth brushing and give you lots of helpful tips too.</p>
+        <p> Should your pet need dental treatment Sandymount Pet Hospital has all the state-of-the-art equipment needed to treat their dental condition. To learn more about the signs of Dental disease click here.</p>
+      
+      </div>
+    </div>
+  </details>
+  <details>
+    <summary>Why do dogs like to bite?</summary>
+    <div class="details-wrapper">
+      <div class="details-styling">        
+        <p>Puppy after weaning, about a month old, is in long teeth, teeth will itch; To four or five years of age, because of tooth replacement, will also be very itchy;  </p>
+        <p>At least until the age of eight or nine, such as permanent teeth completely stop growing, slowly no longer itching.</p>
+        <p>During this time, they will bite to relieve the itching. You don't bite when you're an adult.</p>
+      </div>
+    </div>
+  </details>
+  <details>
+    <summary>Why do dogs like chasing cars?</summary>
+    <div class="details-wrapper">   
+      <div class="details-styling">        
+        <p>This is a dog's nature and a bad habit that can be corrected. </p>
+        <p>Dogs are natural hunters and like to chase moving prey, not only cars and pedestrians, but also others, such as dogs, cats, birds, flies, cockroaches and so on.</p>
+      </div>
+      </div>
+    </div>
+  </details>
+</div>
+
+<h2>Find us</h2>
+<script
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxg005t3HSSRqR41QV9F9l_RJ8x8fSxkM&callback=initMap">
+</script>
+
+<script>
+var myCenter=new google.maps.LatLng(52.18892,-7.08159 );
+
+function initialize()
+{
+var mapProp = {
+  center:myCenter,
+  zoom:5,
+  mapTypeId:google.maps.MapTypeId.ROADMAP
+  };
+
+var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+var marker=new google.maps.Marker({
+  position:myCenter,
+  });
+
+marker.setMap(map);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+<div id="googleMap" style="width:500px;height:380px;"></div>
+ <script type="text/javascript">
+
+var _createClass = function () {function defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}return function (Constructor, protoProps, staticProps) {if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;};}();function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}miscPolyfillsForIE();
+
+
+Collapse = function () {
+function Collapse(container) {var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};_classCallCheck(this, Collapse);
+var defaults = {
+accordion: false,
+initClass: 'collapse-init',
+activeClass: 'panel-active',
+heightClass: 'collapse-reading-height' };
+
+
+this.settings = Object.assign({}, defaults, options);
+
+this._container = container;
+this._panels = container.querySelectorAll("details");
+
+this.events = {
+openingPanel: new CustomEvent('openingPanel'),
+openedPanel: new CustomEvent('openedPanel'),
+closingPanel: new CustomEvent('closingPanel'),
+closedPanel: new CustomEvent('closedPanel') };
+
+}
+
+// Sets height of panel content
+_createClass(Collapse, [{ key: '_setPanelHeight', value: function _setPanelHeight(panel) {
+var contents = panel.querySelector("summary + *");
+
+contents.style.height = contents.scrollHeight + "px";
+}
+
+// Removes height of panel content
+}, { key: '_removePanelHeight', value: function _removePanelHeight(panel) {
+var contents = panel.querySelector("summary + *");
+
+contents.style.height = null;
+}
+
+//=== Open panel
+}, { key: 'open', value: function open(panel) {
+panel.dispatchEvent(this.events.openingPanel);
+
+panel.open = true;
+}
+
+// Add height and active class, this triggers opening animation
+}, { key: '_afterOpen', value: function _afterOpen(panel) {
+this._setPanelHeight(panel);
+panel.classList.add(this.settings.activeClass);
+}
+
+// Remove height on animation end since it's no longer needed
+}, { key: '_endOpen', value: function _endOpen(panel) {
+panel.dispatchEvent(this.events.openedPanel);
+
+this._removePanelHeight(panel);
+}
+
+//=== Close panel, not toggling the actual [open] attr!
+}, { key: 'close', value: function close(panel) {
+panel.dispatchEvent(this.events.closingPanel);
+this._afterClose(panel);
+}
+
+// Set height, wait a beat, then remove height to trigger closing animation
+}, { key: '_afterClose', value: function _afterClose(panel) {var _this = this;
+this._setPanelHeight(panel);
+
+setTimeout(function () {
+panel.classList.remove(_this.settings.activeClass);
+_this._removePanelHeight(panel);
+}, 100); //help, this is buggy and hacky
+}
+
+// Actually closes panel once animation finishes
+}, { key: '_endClose', value: function _endClose(panel) {
+panel.dispatchEvent(this.events.closedPanel);
+
+panel.open = false;
+}
+
+//=== Toggles panel... just in case anyone needs this
+}, { key: 'toggle', value: function toggle(panel) {
+panel.open ? this.close(panel) : this.open(panel);
+}
+
+//=== Accordion closes all panels except the current passed panel 
+}, { key: 'openSinglePanel', value: function openSinglePanel(panel) {var _this2 = this;
+this._panels.forEach(function (element) {
+if (panel == element && !panel.open) {
+_this2.open(element);
+} else {
+_this2.close(element);
+}
+});
+}
+
+//=== Opens all panels just because
+}, { key: 'openAll', value: function openAll() {var _this3 = this;
+this._panels.forEach(function (element) {
+_this3.open(element);
+});
+}
+
+//=== Closes all panels just in case
+}, { key: 'closeAll', value: function closeAll() {var _this4 = this;
+this._panels.forEach(function (element) {
+_this4.close(element);
+});
+}
+
+// Now put it all together
+}, { key: '_attachEvents', value: function _attachEvents() {var _this5 = this;
+this._panels.forEach(function (panel) {
+var toggler = panel.querySelector("summary");
+var contents = panel.querySelector("summary + *");
+
+// On panel open
+panel.addEventListener("toggle", function (e) {
+var isReadingHeight = panel.classList.contains(_this5.settings.heightClass);
+
+if (panel.open && !isReadingHeight) {
+_this5._afterOpen(panel);
+}
+});
+
+toggler.addEventListener("click", function (e) {
+// If accordion, stop default toggle behavior
+if (_this5.settings.accordion) {
+_this5.openSinglePanel(panel);
+e.preventDefault();
+}
+
+// On attempting close, stop default close behavior to substitute our own
+else if (panel.open) {
+_this5.close(panel);
+e.preventDefault();
+}
+
+// On open, proceed as normal (see toggle listener above)
+});
+
+/*
+transitionend fires once for each animated property, 
+but we want it to fire once for each click. 
+So let's make sure to watch only a single property
+Note this makes complex animations with multiple transition-durations impossible
+Sorry
+*/
+var propToWatch = '';
+
+// On panel finishing open/close animation
+contents.addEventListener("transitionend", function (e) {
+// Ignore transitions from child elements
+if (e.target !== contents) {
+return;
+}
+
+// Set property to watch on first fire
+if (!propToWatch) propToWatch = e.propertyName;
+
+// If watched property matches currently animating property
+if (e.propertyName == propToWatch) {
+var wasOpened = panel.classList.contains(_this5.settings.activeClass);
+wasOpened ? _this5._endOpen(panel) : _this5._endClose(panel);
+}
+});
+});
+} }, { key: 'init', value: function init()
+
+{
+// Attach functionality
+this._attachEvents();
+
+// If accordion, open the first panel
+if (this.settings.accordion) {
+this.openSinglePanel(this._panels[0]);
+}
+
+// For styling purposes
+this._container.classList.add(this.settings.initClass);
+
+return this;
+} }]);return Collapse;}();
+
+
+var makeMePretty = document.querySelector(".collapse");
+var accordion = new Collapse(makeMePretty, { accordion: true }).init();
+
+// Toggle accordion behavior
+document.querySelector("#accordion-toggle").
+addEventListener("change", function () {
+this.checked ?
+accordion.settings.accordion = false :
+accordion.settings.accordion = true;
+});
+
+// hoisthoistupwego I'm stuck on a machine with IE11
+function miscPolyfillsForIE() {
+// NodeList.forEach() polyfill
+// https://developer.mozilla.org/en-US/docs/Web/API/NodeList/forEach#Browser_Compatibility
+if (window.NodeList && !NodeList.prototype.forEach) {
+NodeList.prototype.forEach = Array.prototype.forEach;
+}
+
+// Object.assign() polyfill 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+"function" != typeof Object.assign && Object.defineProperty(Object, "assign", { value: function value(e, t) {"use strict";if (null == e) throw new TypeError("Cannot convert undefined or null to object");for (var n = Object(e), r = 1; r < arguments.length; r++) {var o = arguments[r];if (null != o) for (var c in o) {Object.prototype.hasOwnProperty.call(o, c) && (n[c] = o[c]);}}return n;}, writable: !0, configurable: !0 });
+
+// CustomEvent polyfill
+// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+!function () {if ("function" == typeof window.CustomEvent) return !1;function t(t, e) {e = e || { bubbles: !1, cancelable: !1, detail: void 0 };var n = document.createEvent("CustomEvent");return n.initCustomEvent(t, e.bubbles, e.cancelable, e.detail), n;}t.prototype = window.Event.prototype, window.CustomEvent = t;}();
+}
+    </script>
+
+
+</body>
+
+</html>

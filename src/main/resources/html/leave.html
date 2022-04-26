@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/plug/layui/css/layui.css}" type="text/css"/>
+
+</head>
+<style type="text/css">
+    a {
+        text-decoration: none !important;
+        cursor: pointer !important;
+        color: #555666 !important;
+    }
+
+    /* 已访问的链接 */
+    a:hover {
+        color: #fc5531 !important;
+    }
+
+    .art h1 {
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 46px;
+        margin: 5px auto 15px auto;
+        text-align: center;
+    }
+
+    .art .meta {
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
+
+    .content p {
+        margin-top: 23px;
+        text-align: justify;
+        font-size: 20px;
+        line-height: 38px;
+        text-indent: 0em;
+    }
+
+    .com {
+        margin-top: 20px;
+    }
+
+    .com h2 {
+        font-size: 18px;
+        color: #000;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    /*评论展示区*/
+    .comment-list {
+        margin-top: 10px;
+    }
+
+    .comment-line-box {
+        padding: 8px 0px;
+    }
+
+    .replay-box .comment-list {
+        margin-left: 32px;
+        padding-left: 10px;
+        border-left: 2px solid #f5f6f7;
+        border-bottom: none;
+    }
+
+    .comment-line-box .nickname {
+        color: #009688;
+    }
+
+    .comment-line-box .opt {
+        margin-left: 10px;
+    }
+
+    .comment-line-box .opt a {
+        font-size: 12px;
+        margin-left: 5px;
+    }
+
+    .comm {
+        margin-left: -500px;
+    }
+
+</style>
+<body>
+
+
+<!--评论表单-->
+<div class="layui-row comm" id="combox">
+    <div class="layui-col-md6 layui-col-md-offset3 com">
+        <h2>Message board</h2>
+
+        <form action="" class="layui-form layui-form-pane">
+            <div class="layui-form-item">
+                <div class="layui-form-item">
+                    <div class="layui-input-inline">
+                        <textarea class="layui-textarea" cols="30" id="content" lay-verify="required" maxlength="100"
+                                  name="content" placeholder="Up to 100 words" required rows="5"
+                                  style="resize:none;width: 1080px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <input hidden="hidden" id="replyTo" type="text">
+            <input hidden="hidden" id="parentId" type="text">
+            <div class="layui-form-item" style="float: right">
+                <button class="layui-btn" lay-filter="comform" lay-submit>Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--评论展示区-->
+<div class="layui-row comm">
+    <div class="layui-col-md6 layui-col-md-offset3 com-box">
+        <div class="comment-list-box">
+            <ul class="comment-list" th:each="comment: ${clist}">
+                <li class="comment-line-box d-flex" data-commentid="15937123" data-username="weixin_46274168">
+                    <a href="#">
+                        <span class="nickname" th:text="${comment.getUsername()}">我是小白呀</span>
+                    </a>
+                    <span class="colon">:</span>
+                    <span class="comment" th:text="${comment.getContent()}">给大佬递茶，望有空互粉互访点赞(=^ω^=)</span>
+                    <span class="opt">
+                        <a th:attr="onclick=|reply(${comment.id},'${comment.username}')|">Reply</a>
+                        <a th:if="${roleId ne 2||(userId eq comment.getCreateUserId() and #lists.isEmpty(comment.getCommentList())) }"
+                           th:onclick="remove([[${comment.id}]])">Delete</a>
+                    </span>
+                </li>
+                <li class="replay-box" style="display:block" th:each="subComment: ${comment.getCommentList()}">
+                    <ul class="comment-list">
+                        <li class="comment-line-box" data-commentid="15938081" data-replyname="IndexMan">
+                            <a href="#">
+                                <span class="nickname" th:text="${subComment.getUsername()}">罗汉鱼</span>
+                            </a>
+                            <span class="text">Reply</span>
+                            <a href="#">
+                                <span class="nickname" th:text="${subComment.getReplyTo()}">我是小白呀</span>
+                            </a>
+                            <span class="colon">:</span>
+                            <span class="comment" th:text="${subComment.getContent()}">：）</span>
+                            <span class="opt">
+                                <a th:attr="onclick=|reply(${comment.id},'${subComment.username}')|">Reply</a>
+                            <a th:if="${roleId ne 2 || userId eq subComment.getCreateUserId()}"
+                               th:onclick="remove([[${subComment.id}]])">Delete</a>
+                            </span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script charset="utf-8" th:src="@{/plug/layui/layui.js}" type="text/javascript"></script>
+
+<script>
+    layui.use(['layer', 'form'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        $ = layui.jquery;
+
+
+        // 加载评论列表
+        // 提交评论
+        form.on('submit(comform)', function (data) {
+            let content = $('#content').val();
+            if (!content) {
+                content = $('#contentOpen').val();
+            }
+            var data = {
+                "username": $("#username").val(),
+                "content": content,
+                "replyTo": $('#replyTo').val(),
+                "parentId": $('#parentId').val()
+            };
+
+            //layer.alert(JSON.stringify(data));
+            // 添加评论
+            saveComment(data);
+
+            return false;
+        });
+
+
+    });
+
+    function remove(id) {
+        layer.confirm('Confirm to delete？', function (index) {
+
+            //layer.alert(JSON.stringify(ids));
+            $.ajax({
+                url: '/comment/remove/' + id,
+                type: 'POST',
+                success: function (res) {
+                    var result = JSON.parse(res);
+                    console.log(result);
+                    if (result.code == 200 || result.code == "200") {
+                        // 刷新页面
+                        layer.alert('Delete successfully!', {icon: 1,btn:["sure"]}, function (indexOk) {
+                            window.location.href = "/leave";
+                            layer.close(indexOk);
+                        });
+                    } else {
+                        layer.msg("Delete failed!", {icon: 5});
+                    }
+                }
+            });
+        });
+    }
+
+    function reply(pid, to) {
+        $('#replyTo').val(to);
+        $('#parentId').val(pid);
+        // 弹出回复框：
+        layer.open({
+            type: 1,
+            title: "Reply",
+            skin: "myclass",//自定样式
+            area: ["480px", "270px"],
+            content: "<div class=\"layui-row\"  style='margin-left: -100px'>\n" +
+                "    <div class=\"layui-col-md6 layui-col-md-offset3 com\">\n" +
+                "\n" +
+                "        <form class=\"layui-form layui-form-pane\">\n" +
+                "            <div class=\"layui-form-item\">\n" +
+                "                <div class=\"layui-form-item\">\n" +
+                "                    <div class=\"layui-input-inline\">\n" +
+                "                        <textarea class=\"layui-textarea\" cols=\"30\" id=\"contentOpen\" lay-verify=\"required\" maxlength=\"100\"\n" +
+                "                                  name=\"content\" placeholder=\"Please enter your question\" required rows=\"5\"\n" +
+                "                                  style=\"resize:none;width: 400px;\"></textarea>\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "            <input hidden=\"hidden\" name=\"replyTo\" type=\"text\" value =\"" + to + "\">\n" +
+                "            <input hidden=\"hidden\" name=\"parentId\" value=\"" + pid + "\" type=\"text\">\n" +
+                "            <div class=\"layui-form-item\" style=\"float: right;left: 100px;\n" +
+                "    position: relative;\">\n" +
+                "                <button class=\"layui-btn\" lay-filter=\"comform\"   lay-submit>Submit</button>\n" +
+                "            </div>\n" +
+                "        </form>\n" +
+                "    </div>\n" +
+                "</div>",
+
+            success: function (layero, index) {
+            },
+            yes: function () {
+            }
+        });
+
+    }
+
+    function saveComment(data) {
+        $.ajax({
+            url: '/comment/add',
+            type: 'POST',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.code == 200 || result.code == "200") {
+                    // 刷新页面
+                    $('#replyTo').val('');
+                    $('#parentId').val('');
+                    layer.alert('Save successfully！', {icon: 1,btn:["sure"]}, function (indexOk) {
+                        window.location.href = "/leave";
+                        layer.close(indexOk);
+                    });
+                } else {
+                    layer.alert(result.message);
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

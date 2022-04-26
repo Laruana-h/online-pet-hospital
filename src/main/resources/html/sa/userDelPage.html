@@ -1,0 +1,170 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>User Delete</title>
+<link type="text/css" rel="stylesheet" th:href="@{/css/page.css}"/>
+<script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}"></script>
+<!-- mmGrid -->
+<link rel="stylesheet" type="text/css" th:href="@{/plug/mmGrid/mmGrid.css}"/>
+<script type="text/javascript"  th:src="@{/plug/mmGrid/mmGrid.js}" ></script>
+<!-- mmGrid page -->
+<link rel="stylesheet" type="text/css" th:href="@{/plug/mmGrid/mmPaginator.css}"/>
+<script type="text/javascript" th:src="@{/plug/mmGrid/mmPaginator.js}" ></script>
+
+<!-- layer -->
+<link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}"  media="all"/>
+<script type="text/javascript" th:src="@{/plug/layui/layui.js}"  charset="utf-8"></script>
+
+<link type="text/css" rel="stylesheet" th:href="@{/js/layer/skin/layer.css}"/>
+<script type="text/javascript" th:src="@{/js/layer/layer.js}" ></script>
+
+</head>
+<body>
+<div  lay-allowclose="true" style="margin-left:15px;width: 98%">
+<div class="first_div" style="border:none;">
+	<table class="param_table" style="margin-left:10px;" >
+		<tr>
+			<td style="width:150px;">
+				<span>Name:</span>
+				<input type="text" id="userName" name="userName" class="input_0" />
+			</td>
+			<td style="width:150px;">
+				<span>Id:</span>
+				<input type="text" id="userId" name="userId" class="input_0" />
+			</td>
+			<td style="width:150px;">
+				<span></span>
+				<input type="text" id="dept" name="dept" class="input_0" />
+			</td>
+			<td style="width:150px;">
+				<span>Job:</span>
+				<input type="text" id="position" name="position" class="input_0" />
+			</td>
+			<td style="width:150px;">
+				<span>Sex:</span>
+				<select id="userSex" name="userSex" class="input_0">
+					<option value="-1">All</option>
+					<option value="1">Male</option>
+					<option value="0">Female</option>
+				</select>
+			</td>
+			<td style="width:150px;">
+				<span>Status</span>
+				<select id="userState" name="userState" class="input_0">
+					<option value="-1">All</option>
+					<option value="1">on job</option>
+					<option value="2">dimission</option>
+				</select>
+			</td>
+			<td style="">
+			<div class="layui-btn-group">
+			  <button class="layui-btn" onclick="search()">Search</button>
+			</div>
+			</td>
+		</tr>
+	</table>
+	
+	<div style="margin:3px 10px 10px 10px;"></div>
+	<div id="exampleTableUser" style="margin-top:5px;" ></div>
+	<div id="paginator11-1" align="right" style="margin-right:10px;" ></div>
+</div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+$(function(){	
+	//表格
+	$('#exampleTableUser').mmGrid({
+    	root:'rows',// 和后台数据保存列一致,对应MMGridPageVoBean rows
+		url:"/sa/getAllDelUserByLimit",
+    	width: 'auto',
+    	height: 'auto',
+    	//checkCol: true,
+    	fullWidthRows: true, //表格第一次加载数据时列伸展，自动充满表格
+    	showBackboard: false,
+        //multiSelect: true,
+        indexCol: true,  //索引列
+        params:function(){
+        	var param = new Object();
+       	
+        	param.userName = $.trim($("#userName").val());
+        	param.userId = $.trim($("#userId").val());
+        	param.dept = $.trim($("#dept").val());
+        	param.position = $.trim($("#position").val());
+        	param.userSex = $.trim($("#userSex").val());
+        	param.userState = $("#userState").val(); 
+        	
+        	return param;
+        },
+        cols: [{title: 'ID', name: 'id', width:60, hidden:true},
+			   {title: 'userName', name: 'userName', width:50},
+			   {title: 'userId', name: 'userId', width:50},
+			   {title: 'department', name: 'dept', width:50},
+			   {title: 'position', name: 'position', width:50},
+			   {title: 'Sex', name: 'userSex', width:40, renderer:function(val, item, rowIndex){
+				   if(val == 1){
+					   return "Male";
+				   }else if(val == 0){
+					   return "Female";
+				   }
+				   return "";
+			   }},
+			   {title: 'Phone', name: 'userTel', width:60},
+			   {title: 'E-mail', name: 'userMail', width:160},
+			   {title: 'Status', name: 'userState', width:40, renderer:function(val, item, rowIndex){
+				   if(val == 9){
+					   return "<span style='color:red'>have deleted</span>";
+				   }
+			   }},
+			   {title: 'Operation', name: 'id', width:60, renderer:function(val, item, rowIndex){
+				   var buttonStr = '<span class="layui-btn layui-btn-sm" onclick="editRowOne('+"\'"+item.userId+"\'"+')" >Recover</span>';
+				   return "<div class='span_btus' >" + buttonStr + "</div>";
+			   }}
+           ],
+        plugins : [
+        	$('#paginator11-1').mmPaginator({
+        		totalCountName: 'total',    //对应MMGridPageVoBean count
+        		page: 1,                    //初始页
+        		pageParamName: 'page',      //当前页数
+        		limitParamName: 'limit', //每页数量
+        		limitList: [10, 20, 30, 50]
+        	})
+        ]
+    });
+});
+
+//查询
+function search(){
+	$('#exampleTableUser').mmGrid().load({"page":1});
+}
+
+//删除一行
+function editRowOne(id){
+	layer.confirm('Confirm to recover', {icon: 3, title:'Note',btn:["sure","cancel"]}, function(index){
+		var param = [];
+		param.push({"name":"ids", "value":id});
+    	$.ajax({
+    		type:"POST",
+    		async:true,  //默认true,异步
+    		data:param,
+    		url:"/sa/recoverUser",
+    		success:function(data){
+    			if(data == "SUCCESS"){
+    				layer.alert(' Recovery successful!', {icon: 1,btn:["sure"]}, function(indexOk){
+    					search();
+    					layer.close(indexOk);
+       				});
+    			}else{
+    				layer.alert('Recovery failed!', {icon: 0}, function(indexNo){
+       					layer.close(indexNo);
+       				});
+    			}
+    	    }
+    	});
+	});
+}
+
+</script>

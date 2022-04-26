@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html style="height: 90%; width: 100%" xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <!-- layui -->
+    <link type="text/css" rel="stylesheet" th:href="@{/css/page.css}" />
+    <link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}"  media="all"/>
+    <script type="text/javascript" th:src="@{/plug/layui/layui.js}"  charset="utf-8"></script>
+</head>
+<body style="height: 90%;width: 100%; margin: 0">
+<script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}"></script>
+<script type="text/javascript" th:src="@{/js/echarts/echarts.js}"></script>
+<div id = "badass" style="width:100%">
+<!--    <div id="container" style="height: 400px;width: 100%"></div>-->
+</div>
+
+<span id="count">
+
+</span>
+</body>
+</html>
+
+<script type="text/javascript" th:inline="javascript">
+    var pets = [[${pets}]];
+    var tsCount = [[${tsCount}]];
+    var wsCount = [[${wsCount}]];
+    var hsCount = [[${hsCount}]];
+    var asCount = [[${asCount}]];
+    var dsCount = [[${dsCount}]];
+    var pt = [[${pt}]];
+    var ph = [[${ph}]];
+    var pw = [[${pw}]];
+    var pa = [[${pa}]];
+    var mt = [[${mt}]];
+    var mh = [[${mh}]];
+    var mw = [[${mw}]];
+    var ma = [[${ma}]];
+    var chartOp = []
+
+    // var dom = document.getElementById("container");
+    // var myChart = echarts.init(dom);
+    var app = {};
+    // option = null;
+
+    function fulshEchart(names, mmdatas, mmValue,i){
+        // console.log(names);
+        // console.log(mmdatas);
+        // console.log(mmValue);
+        //  if (i==0) {
+        //      let option = {
+        //          title: {
+        //              text: 'Pet health analysis'
+        //          },
+        //          tooltip: {
+        //              trigger: 'axis'
+        //          },
+        //          legend: {
+        //              left: 'left',
+        //              data: names
+        //          },
+        //          radar: mmdatas,
+        //          series: mmValue
+        //      };
+        //      let container = "container"+i
+        //      let dom = document.getElementById(container);
+        //      let myChart = echarts.init(dom);
+        //      myChart.setOption(option,true)
+        //      return
+        //      // if (option && typeof option === "object") {
+        //      //     setTimeout(myChart.setOption(option), 500);
+        //          // chartOp.push(myChart)
+        //          // window.onresize = function() {
+        //          //     for (let j = 0; j < chartOp.length; j++) {
+        //          //         chartOp[j].resize()
+        //          //     }
+        //          // }
+        //     // }
+        //
+        //  }
+
+        let option = {
+            title: {
+                text: ' '
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                left: 'left',
+                data: names
+            },
+            radar: mmdatas,
+            series: mmValue
+        };
+        let container = "container"+i
+        let dom = document.getElementById(container);
+        let myChart = echarts.init(dom);
+        myChart.setOption(option,true)
+
+        // if (option && typeof option === "object") {
+        //     console.log("123",option)
+        //     // myChart.clear();
+        //     setTimeout(myChart.setOption(option,true), 500);
+        //
+        //
+        //     // chartOp.push(myChart)
+        //     // window.onresize = function() {
+        //     //     for (let j = 0; j < chartOp.length; j++) {
+        //     //         chartOp[j].resize()
+        //     //     }
+        //     // }
+        // }
+
+    }
+
+    $(function(){
+        // console.log(pets,tsCount,wsCount,hsCount,asCount,dsCount,pt,ph,pw,pa,mt,mh,mw,ma)
+
+        var count = $('#count');
+        for (var i=0;i<pets.length; i++){
+            count.append(dsCount[i]+"&nbsp;&nbsp;&nbsp;");
+            count.append(tsCount[i]+"&nbsp;&nbsp;&nbsp;");
+            count.append(wsCount[i]+"&nbsp;&nbsp;&nbsp;");
+            count.append(hsCount[i]+"&nbsp;&nbsp;&nbsp;");
+            count.append(asCount[i]+"&nbsp;&nbsp;&nbsp;");
+            count.append("<hr/>");
+            // console.log("count...",dsCount[i])
+        }
+
+
+        let names = new Array();
+        for (var i=0; i<pets.length; i++){
+            names.push(pets[i].name);
+        }
+        let mmdatas = new Array();
+        let rr = 25;
+        for(var i=0; i<mt.length; i++ ){
+            var mmdata = new Object();
+            mmdata.indicator = new Array();
+            var d = new Object();
+            d.text = "Animal Heat";
+            d.max = mt[i];
+            mmdata.indicator.push(d);
+            d = new Object();
+            d.text = "Weight";
+            d.max = mw[i];
+            mmdata.indicator.push(d);
+            d = new Object();
+            d.text = "Height";
+            d.max = mh[i];
+            mmdata.indicator.push(d);
+            d = new Object();
+            d.text = "Appetite";
+            d.max = ma[i];
+            mmdata.indicator.push(d);
+            mmdata.center = new Array();
+            mmdata.center.push((25+i*25)+'%');
+            mmdata.center.push('40%');
+            mmdata.radius = 80;
+
+            mmdatas.push(mmdata);
+        }
+        let mmValue = new Array();
+        for(var i=0; i<pt.length; i++ ){
+            var tt = new Object();
+            tt.type = 'radar';
+            tt.radarIndex = i;
+            tt.tooltip = new Object();
+            tt.tooltip.trigger= 'item';
+            tt.areaStyle = new Object();
+            tt.data = new Array();
+            var ddO = new Object();
+            ddO.name=names[i];
+            ddO.value = new Array();
+            if (pt!="NaN"){
+                ddO.value.push(pt[i]);
+            }else {
+                ddO.value.push(0);
+            }
+            if (pw!="NaN"){
+                ddO.value.push(pw[i]);
+            }else {
+                ddO.value.push(0);
+            }
+            if (ph!="NaN"){
+                ddO.value.push(ph[i]);
+            }else {
+                ddO.value.push(0);
+            }
+            if (pa!="NaN"){
+                ddO.value.push(pa[i]);
+            }else {
+                ddO.value.push(0);
+            }
+            tt.data.push(ddO);
+            mmValue.push(tt);
+        }
+
+        // console.log("names.....",names);
+        // console.log("mmdatas.....",mmdatas);
+        console.log("mmValue.....",mmValue);
+        let lineCount = Math.ceil(names.length/3)
+        // let lineCount =names.length
+        // console.log("lines....",lineCount)
+        let html = ''
+        for (let i = 0; i < lineCount; i++) {
+            html+='<div style="height: 400px;width: 100%" id="container'+i+'"></div>'}
+        document.getElementById("badass").innerHTML=html
+        for (let i = 0; i < lineCount; i++) {
+
+            var names1 = new Array();
+            var mmdatas1 = new Array();
+            var mmValue1 = new Array()
+            mmdatas[i*3+0].center=['25%', '40%']
+
+            names1.push(names[i*3+0])
+            mmValue[i*3+0].radarIndex=0
+            mmdatas1.push(mmdatas[i*3+0])
+            mmValue1.push(mmValue[i*3+0])
+            if (names[i*3+1] !=undefined) {
+                mmdatas[i*3+1].center=['50%', '40%']
+                names1.push(names[i*3+1])
+                mmdatas1.push(mmdatas[i*3+1])
+                mmValue[i*3+1].radarIndex=1
+                mmValue1.push(mmValue[i*3+1])
+            }
+            if (names[i*3+2] !=null) {
+                mmdatas[i*3+2].center=['75%', '40%']
+                names1.push(names[i*3+2])
+                // names1.push(names[i])
+                mmdatas1.push(mmdatas[i*3+2])
+                // mmdatas1.push(mmdatas[i])
+                mmValue[i*3+2].radarIndex=2
+                mmValue1.push(mmValue[i*3+2])
+                // mmValue1.push(mmValue[i])
+            }
+
+
+
+            console.log("name"+i+"....",names1)
+            console.log("mmdatas"+i+"....",mmdatas1)
+            console.log("mmValue"+i+"....",mmValue1)
+            fulshEchart(names1, mmdatas1, mmValue1,i);
+        }
+        // fulshEchart(names, mmdatas, mmValue);
+    });
+</script>

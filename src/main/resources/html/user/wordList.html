@@ -1,0 +1,240 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Management by politics</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/element/index.css}"/>
+    <script type="text/javascript" th:src="@{/js/vue.min.js}" src="js/vue.min.js" ></script>
+    <script type="text/javascript" th:src="@{/element/index.js}" src="element/index.js" ></script>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/page.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}"></script>
+    <!-- mmGrid -->
+    <link rel="stylesheet" type="text/css" th:href="@{/plug/mmGrid/mmGrid.css}"/>
+    <script type="text/javascript"  th:src="@{/plug/mmGrid/mmGrid.js}" ></script>
+    <!-- mmGrid page -->
+    <link rel="stylesheet" type="text/css" th:href="@{/plug/mmGrid/mmPaginator.css}"/>
+    <script type="text/javascript" th:src="@{/plug/mmGrid/mmPaginator.js}" ></script>
+
+    <!-- layer -->
+    <link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}"  media="all"/>
+    <script type="text/javascript" th:src="@{/plug/layui/layui.js}"  charset="utf-8"></script>
+
+    <link type="text/css" rel="stylesheet" th:href="@{/js/layer/skin/layer.css}"/>
+    <script type="text/javascript" th:src="@{/js/layer/layer.js}" ></script>
+    <style type="text/css">
+        .main-box {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            text-align: center;
+            margin: 0 auto;
+            width: 80%;
+        }
+        .box-item {
+            position: relative;
+            width: 30%;
+            height: 380px;
+            background-color: #ffffff;
+
+            filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);
+            -moz-box-shadow: 2px 2px 10px #909090;
+            -webkit-box-shadow: 2px 2px 10px #909090;
+            box-shadow:2px 2px 10px #909090;
+
+            margin-right: 5px;
+            margin-left: 5px;
+            margin-top: 10px;
+
+        }
+        .item-title {
+             font-size: 22px;
+             line-height: 1.4;
+             color: rgba(0,83,159,1);
+             width: 100%;
+         }
+        .item-btn {
+            position: absolute;
+            bottom: 10px;
+            clear: both;
+            cursor: pointer;
+            font-weight: 700;
+            border: 2px solid rgba(0,83,159,1);
+            color: rgba(0,83,159,1);
+            border-radius: 0;
+            padding: 18px 20px;
+            text-align: center;
+            text-decoration: none;
+            transition: all .3s;
+        }
+        .view-count {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+        }
+        .item-btn:hover {
+            color: #fff;
+            background-color: rgba(0,83,159,1);
+        }
+        .content {
+            padding: 10px;
+        }
+        .item-pro {
+            word-wrap: break-word;
+            font-size: 14px;
+            width: 100%;
+            word-break: break-word;
+        }
+        .my-btn {
+            color: white;
+            background-color: rgba(0,83,159,1);
+            /*padding: 5px;*/
+            height: 62px;
+            width: 10%;
+        }
+        .my-input {
+            border: 0;
+            border-bottom: 2px solid #e7e7e7;
+            border-radius: 0;
+            font-size: 22px;
+            height: 52px;
+            outline: 0;
+            padding: 5px;
+            width: 50%;
+        }
+    </style>
+
+</head>
+<body>
+<div style="text-align: center;width: 100%;height:100%;background-color: #f0f0f0" id="app">
+    <el-row >
+        <input type="text"  id="title" name="title" style="margin-top: 20px"  class="my-input" />
+        <button class="my-btn" @click="getList">Search</button>
+    </el-row>
+    <div class="main-box">
+        <div class="box-item" v-for="(data,i)  in list">
+            <img :src=i+".webp" width="100%" />
+            <div class="content">
+                <div class="item-title">
+                    {{data.title}}
+<!--                    What's important about having a dog?-->
+                </div>
+                <div class="item-pro">
+                    create time : {{data.createTime}}
+                    <!--                    create time : 2020/05/30 10:37:36-->
+                </div>
+                <div class="view-count">
+                    View Count : {{data.viewCount}}
+                </div>
+                <div class="item-btn" @click="detail(data)">Read more</div>
+            </div>
+        </div>
+    </div>
+    <el-pagination style="height: 20px;width: 95%;right: 20px;margin-top: 10px;margin-bottom: 10px"
+            v-show="total>0"
+             layout="pager"
+            :total="total"
+             background
+            :page.sync="queryParams.pageNum"
+            :limit.sync="queryParams.pageSize"
+            @pagination="getList"
+    />
+<!--    <div id="paginator11-1" align="right" style="margin-right:10px;" ></div>-->
+</div>
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+    var vm =new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue.js!',
+            list: [],
+            total: 0,
+            queryParams: {
+                pageNum: 1,
+                pageSize: 10
+            }
+        },
+        mounted() {
+           this.getList()
+        },
+        methods: {
+            detail(data) {
+                console.log("data....",data)
+                xq(data.id)
+            },
+            getList() {
+                console.log("pppppppppp1",this.queryParams)
+                search(this.queryParams)
+            }
+        }
+
+    })
+
+    // $(function(){
+    //     //表格
+    //    search()
+    // });
+
+    //查询
+    function search(params){
+        console.log("pppppppppp",params)
+        const param = {
+            title:  $.trim($("#title").val()),
+            page: params.pageNum,
+            limit: params.pageSize
+        }
+        $.ajax({
+            type:"POST",
+            async:true,  //默认true,异步
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(param),
+            url:"/user/notice/getAllWordByLimit",
+            success:function(data){
+
+                console.log("hhh....",vm)
+                console.log("hhh....",vm.queryParams)
+                vm.total = data.total
+                vm.list = data.rows
+                console.log("hhh..vm.total..",vm.total)
+            }
+        });
+    }
+
+    //删除一行
+    function deleteRowOne(id){
+        var param = [];
+        param.push({"name":"ids", "value":id});
+        $.ajax({
+            type:"POST",
+            async:true,  //默认true,异步
+            data:param,
+            url:"/user/notice/delWord",
+            success:function(data){
+                if(data == "SUCCESS"){
+                    layer.alert('Delete successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+                        search();
+                        layer.close(indexOk);
+                    });
+                }else{
+                    layer.alert('Delete failed', {icon: 2,btn:["sure"]}, function(indexNo){
+                        layer.close(indexNo);
+                    });
+                }
+            }
+        });
+    }
+
+    function xq(id){
+        layer.open({
+            type: 2,
+            title: 'Details',
+            area: ['724px', '70%'],
+            content: '/user/notice/xq?id='+id //iframe的url
+        });
+    }
+</script>

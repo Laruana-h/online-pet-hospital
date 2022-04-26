@@ -1,0 +1,368 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <title>ADD appointment</title>
+    <link rel="stylesheet" th:href="@{/css/page.css}" type="text/css"/>
+    <script th:src="@{/js/jquery/jquery-3.3.1.js}" type="text/javascript"></script>
+    <!-- validation -->
+    <script th:src="@{/js/jquery/jquery.validate.js}" type="text/javascript"></script>
+    <!-- layer -->
+    <link rel="stylesheet" th:href="@{/plug/layui/css/layui.css}" type="text/css"/>
+    <script charset="utf-8" th:src="@{/plug/layui/layui.js}" type="text/javascript"></script>
+
+    <link rel="stylesheet" th:href="@{/js/layer/skin/layer.css}" type="text/css"/>
+    <script th:src="@{/js/layer/layer.js}" type="text/javascript"></script>
+
+    <style type="text/css">
+
+        .need_span {
+            color: red;
+            display: none;
+        }
+
+        .need_0, .validation_span {
+            color: red;
+        }
+
+        .need_1 {
+            color: #666666;
+        }
+
+        .input_0 {
+            width: 250px;
+        }
+
+        .form_table td {
+            padding: 5px;
+        }
+
+        .text_ad_0 {
+            font-weight: bold;
+            color: #444444;
+            white-space: nowrap;
+        }
+    </style>
+
+    <script th:inline="javascript" type="text/javascript">
+        var doctors = [[${doctors}]];
+        var appTimes = [[${appTimes}]];
+        var phone = [[${phone}]]
+        var address = [[${address}]]
+        // console.log("paaaaaaaaaaaaaaaaaaaaa",phone,address)
+        // $("#phone").value = phone
+        // $("#address").value = address
+        // $("input[name=phone]").val([[${phone}]]);
+        // $("input[name=address]").val([[${address}]]);
+        $(function () {
+            // 渲染下拉框
+            for (var i = 0; i < doctors.length; i++) {
+                var d = doctors[i];
+                var newOption = document.createElement("option");
+                newOption.text = d.name;
+                newOption.value = d.id;
+                document.getElementById("doctorId").add(newOption);
+            }
+            for (var i = 0; i < appTimes.length; i++) {
+                var d = appTimes[i];
+                var newOption = document.createElement("option");
+                newOption.text = d.name;
+                newOption.value = d.value;
+                document.getElementById("appTime").add(newOption);
+            }
+            // $("#doctorId").click(function(){
+            //     let did=  $("#doctorId").val();
+            //     const param = {
+            //         userId:did
+            //     }
+            //     console.log("did.........",did)
+            //     $.ajax({
+            //         type: "GET",
+            //         async: true,  //默认true,异步
+            //         data: param,
+            //         url: "/user/getUserById",
+            //         success: function (data) {
+            //             console.log("data...",data)
+            //         }})
+            // })
+        });
+        window.onload=function(){
+            var phone = [[${phone}]]
+            var address = [[${address}]]
+            console.log("paaaaaaaaaaaaaaaaaaaaa",phone,address)
+            $("#phone").val(phone)
+            $("#address").val(address)
+
+        }
+
+
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                //elem: '#appTime' //指定元素
+                type: 'datetime'
+                , trigger: 'click'
+                , lang: 'en'
+                , min: minDate()
+                , ready: () => dateOK()
+                , change: () => dateOK()
+            })
+        });
+
+        function dateOK() {
+            var now = new Date();
+            var arr = ['1-26', '2-14', '3-8', '4-1', '5-1', '6-1', '7-4', '8-17', '9-7', '10-1', '11-22', '12-23', '12-24', '12-25'];
+            var elem = $(".layui-laydate-content");//获取table对象
+            layui.each(elem.find('tr'), function (trIndex, trElem) {//遍历tr
+                layui.each($(trElem).find('td'), function (tdIndex, tdElem) {
+                    //遍历td
+                    var tdTemp = $(tdElem);
+                    if (tdTemp.hasClass('laydate-day-next') || tdTemp.hasClass('laydate-day-prev')) {
+                        return;
+                    }
+                    if (tdIndex === 0 || tdIndex === 6) {
+                        tdTemp.addClass('laydate-disabled');
+                    }
+                    var tempDateArr = tdTemp.attr("lay-ymd").split("-")
+                    var tempDate = tempDateArr[1] + "-" + tempDateArr[2]
+                    if (arr.indexOf(tempDate) > -1) {
+                        tdTemp.addClass('laydate-disabled');
+                    }
+                });
+            });
+        }
+
+        // 设置最小可选的日期
+        function minDate() {
+            var now = new Date();
+            return now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+        }
+
+        var petId = [[${petId}]];
+
+        $(function () {
+            // $("input[name=phone]").val(getCookieValue("phone"));
+            // $("input[name=address]").val(getCookieValue("address"));
+
+            $('form').validate({
+                debug: true,
+                /**//* 设置验证规则 */
+                rules: {
+                    info: {
+                        required: true
+                    },
+                    phone: {
+                        required: true
+                    },
+                    address: {
+                        required: true
+                    },
+                    appTime: {
+                        required: true
+                    }
+                },
+                /**//* 设置错误信息 */
+                messages: {
+                    info: {
+                        required: "The content cannot be null"
+                    },
+                    appTime: {
+                        required: "The appointment time cannot be null"
+                    },
+                    doctorId: {
+                        required: "The vet cannot be null"
+                    },
+                    phone: {
+                        required: "Phone cannot be null"
+                    },
+                    address: {
+                        required: "The address cannot be null"
+                    }
+                },
+                /**//* 设置验证触发事件 */
+                onsubmit: true,
+                /**//* 设置错误信息提示DOM */
+                errorPlacement: function (error, element) {
+                    $(element[0]).parent().find(".validation_span").text(error.html()).show();
+                },
+                success: function (error, element) {
+                    $(element[0]).parent().find(".validation_span").text("");
+                },
+                submitHandler: function () {
+                    save();
+                }
+            });
+
+            //返回按钮
+            $("#backBtu").click(function () {
+                layer.confirm('Confirm to return？', {icon: 3, title: 'Note',btn:["sure","cancel"]}, function (index) {
+                    parent.layer.closeAll();
+                });
+            });
+        });
+
+        function getCookieValue(name) {
+            /**获取cookie的值，根据cookie的键获取值**/
+                //用处理字符串的方式查找到key对应value
+            var name = escape(name);
+            //读cookie属性，这将返回文档的所有cookie
+            var allcookies = document.cookie;
+            //查找名为name的cookie的开始位置
+            name += "=";
+            var pos = allcookies.indexOf(name);
+            //如果找到了具有该名字的cookie，那么提取并使用它的值
+            if (pos != -1) {                       //如果pos值为-1则说明搜索"version="失败
+                var start = pos + name.length;         //cookie值开始的位置
+                var end = allcookies.indexOf(";", start);    //从cookie值开始的位置起搜索第一个";"的位置,即cookie值结尾的位置
+                if (end == -1) end = allcookies.length;    //如果end值为-1说明cookie列表里只有一个cookie
+                var value = allcookies.substring(start, end); //提取cookie的值
+                return (unescape(value));              //对它解码
+            } else { //搜索失败，返回空字符串
+                return "";
+            }
+        }
+
+        //保存
+        function save() {
+            var param = new Object();
+            param.petId = petId;
+            param.info = $.trim($("#info").val());
+            param.phone = $.trim($("#phone").val());
+            param.address = $.trim($("#address").val());
+            param.orderTime = $("#appTime").val();
+            if (param.orderTime) {
+                param.appTime = ''
+                let  l1 = param.orderTime.split(" ")
+                for (let i = 0; i < l1.length; i++) {
+                    if (l1[i] == '~') {
+                        break
+                    }
+                    console.log(l1[i])
+                    if (l1[i] !=' ') {
+                        param.appTime =param.appTime+ " "+ l1[i];
+                    }
+
+                }
+            }
+            param.appTime=param.appTime+":00"
+            console.log("orderTime....",param.appTime)
+
+            param.doctorId = $("#doctorId").val();
+
+            console.log(param);
+            var urlStr = "/user/apply/doAdd";
+
+            layer.confirm('Confirm to save？', {icon: 3, title: 'Note',btn:["sure","cancel"]}, function (index) {
+                $.ajax({
+                    type: "POST",
+                    async: true,  //默认true,异步
+                    data: param,
+                    url: urlStr,
+                    success: function (data) {
+                        console.log(data);
+                        if (data == "SUCCESS") {
+                            layer.alert('Save successfully！', {title: "Note",icon: 1,btn:["Confirm"]}, function (indexOk) {
+                                parent.search();
+                                parent.$("#add_iframe iframe").attr("src", "");
+                                parent.$("div").first().show();
+                                parent.$("#add_iframe").hide();
+                                parent.layer.closeAll();
+                            });
+                        } else if (data == "noPetId") {
+                            layer.alert('No pet selected!', {title: "Note",icon: 2,btn:["Confirm"]}, function (indexNo) {
+                                parent.layer.closeAll();
+                            });
+                        } else if (data == "1") {
+                            layer.alert('The vet at that time are not available', {title: "Note",icon: 2,btn:["Confirm"]}, function (indexNo) {
+                                parent.layer.closeAll();
+                            });
+                        } else {
+                            layer.alert('Save failed!', {icon: 2,btn:["Confirm"]}, function (indexNo) {
+                                parent.layer.closeAll();
+                            });
+                        }
+                    }
+                });
+            });
+        }
+
+    </script>
+</head>
+<body>
+<div style="margin-left:15px; height: 400px;">
+    <div class="first_div" style="border:none;">
+        <div align="left" id="adListDiv">
+            <form>
+                <table class="form_table" style="border-collapse: collapse;margin-left:20px;margin-top:10px;">
+                    <tr>
+                        <td align="right">
+                            <span class="need_0">*</span>
+                            <span class="text_ad_0">Phone:</span>
+                        </td>
+                        <td>
+                            <input class="input_0" id="phone" name="phone" type="text"  />
+                            <span class="validation_span"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <span class="need_0">*</span>
+                            <span class="text_ad_0">Address:</span>
+                        </td>
+                        <td>
+                            <input class="input_0" id="address" name="address" type="text"  />
+                            <span class="validation_span"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <span class="need_0">*</span>
+                            <span class="text_ad_0">Content:</span>
+                        </td>
+                        <td>
+                            <textarea class="input_0" cols="26" id="info" name="info" rows="4"
+                                      style="height: 50px"></textarea>
+                            <span class="validation_span"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <span class="need_0">*</span>
+                            <span class="text_ad_0">Doctor:</span>
+                        </td>
+                        <td>
+                            <select class="input_0" id="doctorId" name="doctorId"></select>
+                            <span class="validation_span"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <span class="need_0">*</span>
+                            <span class="text_ad_0">Appointment Time:</span>
+                        </td>
+                        <td>
+                            <select class="input_0" id="appTime" name="appTime"></select>
+
+                            <span class="validation_span"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" colspan="2">
+                            <div style="margin-top:10px;margin-bottom:20px;margin-left:120px;">
+                                <input class="layui-btn" id="saveBtu" lay-filter="add" lay-submit="" name="saveBtu"
+                                       style="" type="submit" value="Submit"/>
+                                <input class="layui-btn" id="backBtu" lay-filter="add" lay-submit="" name="backBtu"
+                                       style="margin-left:20px;" type="button" value="Back"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
