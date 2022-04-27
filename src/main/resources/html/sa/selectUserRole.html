@@ -134,12 +134,12 @@ function saveUser(){
     		success:function(data){
     			layer.close(layerSaving);
 				if(data == "SUCCESS"){
-    				layer.alert('Save successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+    				layer.alert('Save successfully!', {icon: 1, title: 'Note', btn:["sure"]}, function(indexOk){
     					parent.afterSaveUserRole();
     					layer.close(indexOk);
     				});
     			}else{
-    				layer.alert('Save failed!', {icon: 0}, function(indexOk){
+    				layer.alert('Save failed!', {icon: 0, title: 'Note', btn:["sure"]}, function(indexOk){
     					parent.afterSaveUserRole();
     					layer.close(indexOk);
     				});

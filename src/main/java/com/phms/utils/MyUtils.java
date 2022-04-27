@@ -334,7 +334,7 @@ public class MyUtils{
      * @return
      */
     public static String getDate2String(Date date) {
-        Format format = new SimpleDateFormat("yyyy年MM月dd日  HH时mm分ss秒");
+        Format format = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         return format.format(date);
     }
 

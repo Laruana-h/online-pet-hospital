@@ -30,9 +30,9 @@ public class CommentController{
         if (StringUtils.isEmpty(comment.getContent())) {
             //评论内容不能为空create_user_id 添加失败 400
             map.put("code", "400");
-            map.put("msg", "添加失败");
+            map.put("msg", "Add failed");
             map.put("count", 0);
-            map.put("data", "评论内容不能为空!");
+            map.put("data", "The content can not be null!");
             return JSON.toJSONString(map);
         }
         comment.setUsername(user.getName());
@@ -40,7 +40,7 @@ public class CommentController{
         comment.setCreateUserId(user.getId() + "");
         tbCommentMapper.insertSelective(comment);
         map.put("code", "200");
-        map.put("msg", "添加成功");
+        map.put("msg", "Add successfully!");
         map.put("count", 0);
         return JSON.toJSONString(map);
     }
@@ -52,7 +52,7 @@ public class CommentController{
         final int i = tbCommentMapper.deleteByPrimaryKey(id);
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", "200");
-        map.put("msg", "删除成功");
+        map.put("msg", "Delete successfully!");
         map.put("count", i);
         return JSON.toJSONString(map);
     }

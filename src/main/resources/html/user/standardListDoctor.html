@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title>StandardListDoctor</title>
+<title>StandardListVet</title>
 <link type="text/css" rel="stylesheet" th:href="@{/css/page.css}"/>
 <script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}"></script>
 <!-- mmGrid -->
@@ -141,7 +141,7 @@ function dontPass(id) {
 			success:function(data){
 				console.log(data);
 				if(data == "SUCCESS"){
-					layer.alert('Operation successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+					layer.alert('Operation successfully!',  {icon: 1, title:'Note', btn:["sure"]}, function(indexOk){
 						search();
 						layer.closeAll();
 					});
@@ -149,7 +149,7 @@ function dontPass(id) {
 					//重新登录
 					window.location.href = "/logout";
 				}else{
-					layer.alert('Operation failed!', {icon: 2,btn:["sure"]}, function(indexNo){
+					layer.alert('Operation failed!', {icon: 2, title:'Note', btn:["sure"]}, function(indexNo){
 						layer.closeAll();
 					});
 				}
@@ -175,7 +175,7 @@ function toStatus(id, s) {
 			success:function(data){
 				console.log(data);
 				if(data == "SUCCESS"){
-					layer.alert('Operation successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+					layer.alert('Operation successfully!', {icon: 1,  title:'Note',  btn:["sure"]}, function(indexOk){
 						search();
 						layer.closeAll();
 					});
@@ -183,7 +183,7 @@ function toStatus(id, s) {
 					//重新登录
 					window.location.href = "/logout";
 				}else{
-					layer.alert('Operation failed!', {icon: 2,btn:["sure"]}, function(indexNo){
+					layer.alert('Operation failed!', {icon: 2, title:'Note',  btn:["sure"]}, function(indexNo){
 						layer.closeAll();
 					});
 				}

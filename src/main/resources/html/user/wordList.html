@@ -216,12 +216,12 @@
             url:"/user/notice/delWord",
             success:function(data){
                 if(data == "SUCCESS"){
-                    layer.alert('Delete successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+                    layer.alert('Delete successfully!', {icon: 1,  title:'Note',btn:["sure"]}, function(indexOk){
                         search();
                         layer.close(indexOk);
                     });
                 }else{
-                    layer.alert('Delete failed', {icon: 2,btn:["sure"]}, function(indexNo){
+                    layer.alert('Delete failed', {icon: 2, title:'Note',btn:["sure"]}, function(indexNo){
                         layer.close(indexNo);
                     });
                 }

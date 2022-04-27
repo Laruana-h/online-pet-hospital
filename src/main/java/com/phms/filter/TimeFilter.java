@@ -27,7 +27,7 @@ public class TimeFilter implements Filter {
 	 */
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		logger.info("=======初始化过滤器=========");
+		logger.info("=======Initializing filters=========");
 	}
 
 	/**
@@ -60,6 +60,6 @@ public class TimeFilter implements Filter {
 	 */
 	@Override
 	public void destroy() {
-		logger.info("=======销毁过滤器=========");
+		logger.info("=======Destroy filters=========");
 	}
 }

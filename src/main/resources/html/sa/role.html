@@ -325,7 +325,7 @@ function deleteRow(){
 	    			
 	    			if(data == "SUCCESS"){
 	    				
-	    				layer.alert('Delete successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+	    				layer.alert('Delete successfully!', {icon: 1, title: 'Note',btn:["sure"]}, function(indexOk){
 	    					getAllRole();
 	    					layer.close(indexOk);
 	       				});
@@ -362,7 +362,7 @@ function editRow(){
 //保存角色的权限页面
 function saveRolePage(){
 	if(roleNodeChecked){
-		layer.confirm('Confirm to save?', {icon: 3, title:'Save role page',btn:["sure","cancel"]}, function(index){
+		layer.confirm('Confirm to save?', {icon: 3, title:'Save role page',title: 'Note',btn:["sure","cancel"]}, function(index){
 			var layerSaving = layer.msg('Saving...', {icon: 16, time: 0, shade: [0.3, '#000']});
 			
 			var treeObj = $.fn.zTree.getZTreeObj("treePage");
@@ -384,7 +384,7 @@ function saveRolePage(){
 				success:function(data){
 					layer.close(layerSaving);
 					if(data == "SUCCESS"){
-	    				layer.alert('Save successfully!', {icon: 1,btn:["sure"]});
+	    				layer.alert('Save successfully!', {icon: 1, title: 'Note',btn:["sure"]});
 	    			}else{
 	    				layer.alert('Save failed', {icon: 0,title: 'Note',btn:["sure"]});
 	    			}
@@ -502,15 +502,15 @@ function removeRole(id, rowIndex){
 			success:function(data){
 				layer.close(layerSaving);
 				if(data.result == "success"){
-    				layer.alert('Save successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+    				layer.alert('Save successfully!', {icon: 1, title: 'Note', btn:["sure"]}, function(indexOk){
     					layer.close(indexOk);
     				});
     			}else if(data.message == "DontOP"){
-    				layer.alert("Delete failed! You can't delete yourself!", {icon: 2,btn:["sure"]}, function(indexOk){
+    				layer.alert("Delete failed! You can't delete yourself!", {icon: 2, title: 'Note',btn:["sure"]}, function(indexOk){
     					layer.close(indexOk);
     				});
     			}else{
-    				layer.alert('Save failed', {icon: 2,btn:["sure"]}, function(indexOk){
+    				layer.alert('Save failed', {icon: 2, title: 'Note',btn:["sure"]}, function(indexOk){
     					layer.close(indexOk);
     				});
     			}

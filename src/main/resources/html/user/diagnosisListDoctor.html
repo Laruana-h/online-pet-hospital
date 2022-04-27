@@ -73,7 +73,7 @@ $(function(){
         cols: [{title: 'ID', name: 'id', width:60, hidden:true},
 			{title: 'petName', name: 'name', width:40},
 			{title: 'userName', name: 'userName', width:40},
-			{title: 'doctorName', name: 'doctorName', width:40},
+			{title: 'vetName', name: 'doctorName', width:40},
 			{title: 'suggestion', name: 'info', width:40},
 			{title: 'type', name: 'type', width:30, renderer:function(val, item, rowIndex){
 					console.log(val);
@@ -126,7 +126,7 @@ function search(){
 function dontPass(id) {
 	var param = new Object();
 	param.id = id;
-	layer.confirm('Confirm to save?', {icon: 3, title:'Note',btn:["sure","cancel"]}, function(index){
+	layer.confirm('Confirm to save?', {icon: 3,title:'Note',btn:["sure","cancel"]}, function(index){
 		$.ajax({
 			type:"POST",
 			async:true,  //默认true,异步
@@ -135,7 +135,7 @@ function dontPass(id) {
 			success:function(data){
 				console.log(data);
 				if(data == "SUCCESS"){
-					layer.alert('Operation successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+					layer.alert('Operation successfully!', {icon: 1, title:'Note',btn:["sure"]}, function(indexOk){
 						search();
 						layer.closeAll();
 					});
@@ -143,7 +143,7 @@ function dontPass(id) {
 					//重新登录
 					window.location.href = "/logout";
 				}else{
-					layer.alert('Operation failed!', {icon: 2,btn:["sure"]}, function(indexNo){
+					layer.alert('Operation failed!', {icon: 2,title:'Note',btn:["sure"]}, function(indexNo){
 						layer.closeAll();
 					});
 				}

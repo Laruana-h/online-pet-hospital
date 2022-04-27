@@ -42,15 +42,15 @@ $(function(){
 	//console.log(pageList);
 	//alert(pageList.length);
 	pageList.unshift({pageId:0, name:"All menus", parentId:0});
-	//当levelType为0时才是一级菜单
-	//zTree配置
+	//褰搇evelType涓�0鏃舵墠鏄竴绾ц彍鍗�
+	//zTree閰嶇疆
 	var setting = {
 		data: {
 			simpleData: {
 				enable: true,
-                idKey: "pageId",//节点id名
-                pIdKey: "parentId",//父节点id名
-                rootPId: 0//默认根节点为0
+                idKey: "pageId",//鑺傜偣id鍚�
+                pIdKey: "parentId",//鐖惰妭鐐筰d鍚�
+                rootPId: 0//榛樿鏍硅妭鐐逛负0
 			},
 			key: {
 				url: "aa"
@@ -67,12 +67,12 @@ $(function(){
 	if($("#pageList") && setting!=null && pageList!=null){		
 		zTree = $.fn.zTree.init($("#pageList"), setting, pageList);
 		
-		//全部展开
+		//鍏ㄩ儴灞曞紑
 		zTree.expandAll(true);
 	}
 });
 
-//鼠标移上图标
+//榧犳爣绉讳笂鍥炬爣
 function addHoverDom(treeId, treeNode) {
 	var nodeId = treeNode.pageId;
 	
@@ -85,15 +85,15 @@ function addHoverDom(treeId, treeNode) {
 	var str = "<div id='op_"+nodeId+"' class='op_div'>";
 	
 	if(treeNode.levelType == 0 || nodeId == 0){
-		//只有跟节点，一级菜单可以增加子菜单
+		//鍙湁璺熻妭鐐癸紝涓�绾ц彍鍗曞彲浠ュ鍔犲瓙鑿滃崟
 		str += "<span class='button add' title='Add submenu' onclick='addNode("+nodeId+")' ></span>";
 	}
-	//删除，没有子节点，可以删除
+	//鍒犻櫎锛屾病鏈夊瓙鑺傜偣锛屽彲浠ュ垹闄�
 	var nodes = zTree.getNodesByParam("parentId", nodeId, treeNode);
 	if(nodes == null || nodes.length == 0){
 		str += "<span class='button remove' title='Delete menu' onclick=\"delNode("+nodeId+", '"+treeNode.tId+"')\" ></span>";
 	}
-	//升级，除了跟节点，都可以升级
+	//鍗囩骇锛岄櫎浜嗚窡鑺傜偣锛岄兘鍙互鍗囩骇
 	if(nodeId != 0){
 		str += "<span class='button edit' title='Modify menu' onclick=\"aditNode("+nodeId+", '"+treeNode.tId+"')\" ></span>";
 	}
@@ -105,14 +105,14 @@ function addHoverDom(treeId, treeNode) {
 	checkNode = treeNode;
 };
 
-//移除图标
+//绉婚櫎鍥炬爣
 function removeHoverDom(treeId, treeNode) {
 	$("#op_"+treeNode.pageId).remove();
 };
 
-//增加子菜单
+//澧炲姞瀛愯彍鍗�
 function addNode(parentId){
-	//alert(parentId+" 下增加子菜单");
+	//alert(parentId+" 涓嬪鍔犲瓙鑿滃崟");
 	
 	$(".node_table").find("span").text("");
 	$("#menu_name").val("");
@@ -121,25 +121,25 @@ function addNode(parentId){
 	$("#menu_parentId").val(parentId);
 	
 	if(!parentId){
-		//根菜单,不需要URL
+		//鏍硅彍鍗�,涓嶉渶瑕乁RL
 		$("#menu_url").parent().parent().hide();
 	}
 	
 	layer.open({
 	    type: 1,
 		title: "Add menu",
-	    area: ['440px', '178px'], //宽高
+	    area: ['440px', '178px'], //瀹介珮
 	    content: $("#addNode"),
-	    btn: ['Save','Close'], //按钮
+	    btn: ['Save','Close'], //鎸夐挳
 	    yes: function(index, layero){
 	    	save(parentId);
 	    }
 	});
 }
 
-//修改
+//淇敼
 function aditNode(id, tId){
-	//一级菜单，只能改名称
+	//涓�绾ц彍鍗曪紝鍙兘鏀瑰悕绉�
 	var node = zTree.getNodeByTId(tId);
 	
 	if(node.levelType == 0){
@@ -156,9 +156,9 @@ function aditNode(id, tId){
 	layer.open({
 	    type: 1,
 		title: "Modify menu",
-	    area: ['440px', '178px'], //宽高
+	    area: ['440px', '178px'], //瀹介珮
 	    content: $("#addNode"),
-	    btn: ['Save','Close'], //按钮
+	    btn: ['Save','Close'], //鎸夐挳
 	    yes: function(index, layero){
 	    	edit(tId);
 	    }
@@ -166,7 +166,7 @@ function aditNode(id, tId){
 }
 
 function edit(tId){
-	//一级菜单，只能改名称
+	//涓�绾ц彍鍗曪紝鍙兘鏀瑰悕绉�
 	var node = zTree.getNodeByTId(tId);
 	
 	$(".node_table span").text("");
@@ -184,7 +184,7 @@ function edit(tId){
 	}
 	
 	if(node.levelType == 0){
-		//只验证名称
+		//鍙獙璇佸悕绉�
 	}else{
 		var url = $.trim($("#menu_url").val());
 		
@@ -205,18 +205,18 @@ function edit(tId){
 		
 		$.ajax({
     		type:"POST",
-    		async: false,  //默认true,异步
+    		async: false,  //榛樿true,寮傛
     		data: node,
     		dataType:"json",  
     		url: "/admin/updatePageById",
     		success:function(data){
 				layer.closeAll();
 		    	if(data.result == "success"){
-    				layer.alert('Update successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+    				layer.alert('Update successfully!', {icon: 1, title:'Note',btn:["sure"]}, function(indexOk){
     					layer.close(indexOk);
     				});
     			}else{
-    				layer.alert('Update failed!', {icon: 0}, function(indexOk){
+    				layer.alert('Update failed!', {icon: 0, title:'Note',btn:["sure"]}, function(indexOk){
     					layer.close(indexOk);
     				});
     			}
@@ -249,8 +249,8 @@ function save(parentId){
 	}
 	
 	if(flag){
-		//验证通过
-		//alert("验证通过");
+		//楠岃瘉閫氳繃
+		//alert("楠岃瘉閫氳繃");
 		layer.msg('Saving...', {icon: 16, time: 0, shade: [0.3, '#000']});
 		
 		var param = {};
@@ -260,7 +260,7 @@ function save(parentId){
 		param.parentId = $("#menu_parentId").val();
 		
 		var nodes = zTree.getNodesByParam("parentId", param.parentId, null);
-		//新增节点在最后，要确定他的levelType,levelIndex
+		//鏂板鑺傜偣鍦ㄦ渶鍚庯紝瑕佺‘瀹氫粬鐨刲evelType,levelIndex
 		param.levelIndex = 0;
 		for(var i=0; i<nodes.length; i++){
 			if(nodes[i].levelIndex > param.levelIndex){
@@ -278,19 +278,19 @@ function save(parentId){
 		
 		$.ajax({
     		type:"POST",
-    		async: false,  //默认true,异步
+    		async: false,  //榛樿true,寮傛
     		data: param,
     		dataType:"json",
     		url: "/admin/addPage",
     		success:function(data){
-		    	//增加成功
+		    	//澧炲姞鎴愬姛
 				layer.closeAll();
     			if(null!=data.pageId){
-    				layer.alert('Update successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+    				layer.alert('Update successfully!', {icon: 1, title:'Note',btn:["sure"]}, function(indexOk){
     					layer.close(indexOk);
     				});
     			}else{
-    				layer.alert('Update failed!', {icon: 0}, function(indexOk){
+    				layer.alert('Update failed!', {icon: 0, title:'Note',btn:["sure"]}, function(indexOk){
     					layer.close(indexOk);
     				});
     			}
@@ -302,23 +302,23 @@ function save(parentId){
 }
 
 function delNode(id, tId){
-	layer.confirm('Confirm to delete？', {icon: 3, title:'Note',btn:["sure","cancel"]}, function(index){
+	layer.confirm('Confirm to delete?', {icon: 3, title:'Note',btn:["sure","cancel"]}, function(index){
 		if(id){			
 			layer.msg('Saving...', {icon: 16, time: 0, shade: [0.3, '#000']});
 			$.ajax({
 	    		type:"POST",
-	    		async:false,  //默认true,异步
+	    		async:false,  //榛樿true,寮傛
 	    		data: {id:id+""},
 	    		dataType:"json",  
 	    		url: "/admin/delPageById",
 	    		success:function(data){
 	    			layer.closeAll();
 	    			if(data.result == "success"){
-	    				layer.alert('Delete successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+	    				layer.alert('Delete successfully!', {icon: 1, title:'Note',btn:["sure"]}, function(indexOk){
 	    					layer.close(indexOk);
 	    				});
 	    			}else{
-	    				layer.alert('Delete failed', {icon: 0}, function(indexOk){
+	    				layer.alert('Delete failed', {icon: 0,title:'Note',btn:["sure"]}, function(indexOk){
 	    					layer.close(indexOk);
 	    				});
 	    			}
@@ -340,7 +340,7 @@ function delNode(id, tId){
 	<div id="addNode" style="display:none;margin:10px;">
 		<table class="node_table" cellpadding="0" cellspacing="0" style="">
 			<tr>
-				<td align="right">Name：</td>
+				<td align="right">Name:</td>
 				<td align="left">
 					<input type="text" id="menu_name" class="input_0" />
 				</td>
@@ -352,7 +352,7 @@ function delNode(id, tId){
 				<td colspan="3" style="height:5px;"></td>
 			</tr>
 			<tr id="urlTr">
-				<td align="right">URL：</td>
+				<td align="right">URL:</td>
 				<td align="left">
 					<input type="text" id="menu_url" class="input_0" />
 				</td>

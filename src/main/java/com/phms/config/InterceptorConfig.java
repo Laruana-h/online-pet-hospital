@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- * @Author LinChaoFan
+ * @Author Sijie He
  * @Date 2022/4/22 10:18
  * @Version 1.0
  */

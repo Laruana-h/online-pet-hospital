@@ -54,21 +54,21 @@ public class CustomRealm extends AuthorizingRealm {
 		// 从数据库获取对应用户名密码的用户
 		User user = userMapper.getByName(token.getUsername());
 		if (null == user) {
-			logger.warn("{}---用户不存在", token.getUsername());
+			logger.warn("{}---User does not exist", token.getUsername());
 			// 向前台抛出用户不存在json对象
 			throw new AccountException("USERNAME_NOT_EXIST");
 		}
 		String password = user.getPassword();
 		if (null == password) {
-			logger.warn("{}---用户不存在", token.getUsername());
+			logger.warn("{}---User does not exist", token.getUsername());
 			// 向前台抛出用户不存在json对象
 			throw new AccountException("USERNAME_NOT_EXIST");
 		} else if (!password.equals(new String((char[]) token.getCredentials()))) {
-			logger.warn("{}---输入密码错误", token.getUsername());
+			logger.warn("{}---Wrong password", token.getUsername());
 			// 向前台抛出输入密码错误json对象
 			throw new AccountException("PASSWORD_ERR");
 		}
-		logger.info("{}---身份认证成功", user.getName());
+		logger.info("{}---Login successfully!", user.getName());
 		Subject subject = SecurityUtils.getSubject();
 		// 设置shiro session过期时间(单位是毫秒!)
 		subject.getSession().setTimeout(7_200_000);
@@ -112,7 +112,7 @@ public class CustomRealm extends AuthorizingRealm {
 		if (null != user) {
 			roles = userRoleMapper.getRoles(user.getId()+"");
 		} else {
-			logger.warn("用户session失效!");
+			logger.warn("User session invaid!");
 		}
 		Set<String> set = new HashSet<>();
 		// 需要将 role 封装到 Set 作为 info.setRoles() 的参数

@@ -49,6 +49,7 @@ layui.use('laydate', function(){
 	    elem: '#appTime' //指定元素
           ,type: 'datetime'
 	    ,trigger : 'click'
+	    ,lang:'en'
 	  });
 });
 
@@ -143,7 +144,7 @@ function save(){
     param.petId = $("#petId").val();
     console.log(petId);
     if (!petId){
-        layer.alert('Cannot be added without pet id!', {icon: 2,btn:["sure"]}, function(indexNo){
+        layer.alert('Cannot be added without pet id!', {icon: 2, title:'Note',btn:["sure"]}, function(indexNo){
             parent.layer.closeAll();
         });
     }
@@ -160,7 +161,7 @@ function save(){
     		success:function(data){
     			console.log(data);
     			if(data == "SUCCESS"){
-    				layer.alert('Save successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+    				layer.alert('Save successfully!', {icon: 1, title:'Note',btn:["sure"]}, function(indexOk){
        					parent.search();
        	    			parent.$("#add_iframe iframe").attr("src", "");
        			    	parent.$("div").first().show();
@@ -171,7 +172,7 @@ function save(){
     				//重新登录
     				parent.window.location.href = "/logout";    				
     			}else{
-    				layer.alert('Save failed!', {icon: 2,btn:["sure"]}, function(indexNo){
+    				layer.alert('Save failed!', {icon: 2, title:'Note',btn:["sure"]}, function(indexNo){
     					parent.layer.closeAll();
        				});
     			}

@@ -169,7 +169,7 @@ $(function(){
 	        },
 			idCard: {
 	        	required:true,
-	        	 rangelength:[18, 18],
+	        	 rangelength:[1, 18],
 	        },
 			address: {
 				required:true
@@ -250,11 +250,11 @@ function save(){
     		url:urlStr,
     		success:function(data){
     			if(data == "SUCCESS"){
-    				layer.alert('Save successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+    				layer.alert('Save successfully!', {icon: 1, title:'Note',btn:["sure"]}, function(indexOk){
     					parent.layer.closeAll();
        				});
     			}else{
-    				layer.alert('Save failed!', {icon: 3}, function(indexNo){
+    				layer.alert('Save failed!', {icon: 3, title:'Note',btn:["sure"]}, function(indexNo){
     					parent.layer.closeAll();
        				});
     			}

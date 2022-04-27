@@ -25,7 +25,7 @@ public class ListenerTest implements ServletContextListener {
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		logger.info("-------监听器初始化-------");
+		logger.info("-------Listener initialization-------");
 	}
 
 	/**
@@ -39,6 +39,6 @@ public class ListenerTest implements ServletContextListener {
 	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		logger.info("-------销毁监听器-------");
+		logger.info("-------Destroy the listener-------");
 	}
 }

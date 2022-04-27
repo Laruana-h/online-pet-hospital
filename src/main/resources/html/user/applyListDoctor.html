@@ -190,7 +190,7 @@ function toStatus(id, s) {
 			success:function(data){
 				console.log(data);
 				if(data == "SUCCESS"){
-					layer.alert('Operation successfully!', {icon: 1,btn:["sure"]}, function(indexOk){
+					layer.alert('Operation successfully!', {icon: 1,title:'Note',btn:["sure"]}, function(indexOk){
 						search();
 						layer.closeAll();
 					});
@@ -198,7 +198,7 @@ function toStatus(id, s) {
 					//就诊
 					addRow(param.id);
 				}else{
-					layer.alert('Operation failed!', {icon: 2,btn:["sure"]}, function(indexNo){
+					layer.alert('Operation failed!', {icon: 2,title:'Note',btn:["sure"]}, function(indexNo){
 						layer.closeAll();
 					});
 				}

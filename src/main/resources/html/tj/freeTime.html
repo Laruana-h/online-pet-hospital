@@ -91,7 +91,7 @@ Please select the date
         var id = $("#petId").val();
         var ckTime = $("#ckTime").val();
         if (!ckTime){
-            layer.alert('Please select the date!', {icon: 2,btn:["sure"]}, function(indexNo){
+            layer.alert('Please select the date!', {icon: 2, title:'Note',btn:["sure"]}, function(indexNo){
                 layer.closeAll();
                 layer.close(indexNo);
             });
@@ -107,7 +107,7 @@ Please select the date
                 fulshEchart(data.n, data.v, data.t);
             },
             error: function() {
-                layer.alert('System error!', {icon: 2,btn:["sure"]});
+                layer.alert('System error!', {icon: 2, title:'Note',btn:["sure"]});
             }
         });
     }

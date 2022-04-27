@@ -55,10 +55,10 @@ public class UserServiceImpl implements UserService {
 		// 根据权限，指定返回数据
 		List<String> role = userRoleMapper.getRoles(user.getId()+"");
 		if (!role.isEmpty()) {
-			logger.info("欢迎登录------您的权限是{}", role);
-			return resultMap.success().message("欢迎登陆");
+			logger.info("Welcome login------Your role are {}", role);
+			return resultMap.success().message("Welcome login!");
 		}
-		return resultMap.fail().message("权限错误！");
+		return resultMap.fail().message("Wrong role");
 	}
 
 	@Override
@@ -77,10 +77,10 @@ public class UserServiceImpl implements UserService {
 		// 根据权限，指定返回数据
 		List<String> role = userRoleMapper.getRoles(user.getId()+"");
 		if (!role.isEmpty()) {
-			logger.info("欢迎登录------您的权限是{}", role);
-			return resultMap.success().message("欢迎登陆");
+			logger.info("Welcome login------Your role are {}", role);
+			return resultMap.success().message("Welcome login!");
 		}
-		return resultMap.fail().message("权限错误！");
+		return resultMap.fail().message("Wrong role!");
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
 				userExample.createCriteria().andIdEqualTo(user.getId());
 				n = userMapper.updateByExampleSelective(upUser, userExample);
 			} catch (Exception e) {
-				logger.error("修改密码异常", e);
+				logger.error("Modify password exception!", e);
 				// 事物回滚
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				return "ERROR";
