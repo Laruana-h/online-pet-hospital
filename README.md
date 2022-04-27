@@ -1,8 +1,12 @@
-# 宠物医院管理系统
+# Online pet Care
 
-#### 介绍
-宠物医院管理系统
+#### Abstract 
 
-#### 软件架构
-软件架构说明
+Nowadays, pets are valuable companions for all of us.The health of pets is very important to pet owners My application builds a web-based application pet care system ,providing a good service for pet owner to look after their pets. including online medical diagnosis and malke the appointment for pet
+
+
+#### Design
+
+
+
 
